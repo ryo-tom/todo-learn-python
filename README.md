@@ -34,6 +34,24 @@ python server.py
 
 ブラウザで <http://localhost:8080>にアクセス
 
+## 🔧 API Usage
+
+### 1. Get All Todos
+
+- **Endpoint**: `GET /todos`
+- **Description**: Fetches all the todos.
+- **Example**:
+
+  ```bash
+  curl http://localhost:8080/todos
+  ```
+
+- **Response**:
+
+  ```json
+  []
+  ```
+
 ## 🗂️ Notes
 
 ...

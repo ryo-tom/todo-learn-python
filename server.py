@@ -1,7 +1,15 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
-# TODO: jsonファイルの読み込み
+TODOS_FILE = "todos.json"
+
+
+def load_todos():
+    try:
+        with open(TODOS_FILE, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
 
 
 class TodoHandler(BaseHTTPRequestHandler):
@@ -13,7 +21,11 @@ class TodoHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(content).encode())
 
     def do_GET(self):
-        self._send_response(200, {'message': 'Server is running'})
+        if self.path == "/todos":
+            todos = load_todos()
+            self._send_response(200, todos)
+        else:
+            self._send_response(404, {"error": "Not Found"})
 
 
 def run():
