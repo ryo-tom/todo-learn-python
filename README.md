@@ -52,6 +52,28 @@ python server.py
   []
   ```
 
+### 2. Add a New Todo
+
+- **Endpoint**: `POST /todos`
+- **Description**: Adds a new todo item.
+- **Example**:
+
+  ```bash
+  curl -X POST http://localhost:8080/todos \
+      -H "Content-Type: application/json" \
+      -d '{"title": "Learn Python", "completed": false}'
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "title": "Learn Python",
+    "completed": false,
+    "id": 0
+  }
+  ```
+
 ## 🗂️ Notes
 
 ...

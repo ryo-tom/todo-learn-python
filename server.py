@@ -12,6 +12,11 @@ def load_todos():
         return []
 
 
+def save_todos(todos):
+    with open(TODOS_FILE, 'w') as file:
+        json.dump(todos, file)
+
+
 class TodoHandler(BaseHTTPRequestHandler):
     def _send_response(self, status_code, content=None):
         self.send_response(status_code)
@@ -24,6 +29,30 @@ class TodoHandler(BaseHTTPRequestHandler):
         if self.path == "/todos":
             todos = load_todos()
             self._send_response(200, todos)
+        else:
+            self._send_response(404, {"error": "Not Found"})
+
+    def do_POST(self):
+        if self.path == "/todos":
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            try:
+                todo = json.loads(post_data)
+
+                # Validation
+                if 'title' not in todo or 'completed' not in todo:
+                    self._send_response(400, {'error': 'Missing required fields'})
+                    return
+
+                todos = load_todos()
+
+                # ID自動生成
+                todo['id'] = max((item['id'] for item in todos), default=-1) + 1
+                todos.append(todo)
+                save_todos(todos)
+                self._send_response(201, todo)
+            except json.JSONDecodeError:
+                self._send_response(400, {"error": "Invalid Json"})
         else:
             self._send_response(404, {"error": "Not Found"})
 
